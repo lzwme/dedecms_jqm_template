@@ -1,0 +1,148 @@
+<?php
+/*
+echo '<'.'?xml version="1.0" encoding="UTF-8" ?'.">\r\n";
+?>
+<!DOCTYPE wml PUBLIC '-//WAPFORUM//DTD WML 1.1//EN' 'http://www.wapforum.org/DTD/wml_1.1.xml'>
+<wml>
+<card id='main' title='<?php echo $typename; ?>'>
+
+<p><img src='<?php echo $cfg_templeturl; ?>/wap/logo.gif' alt='<?php echo $cfg_webname; ?>' /></p>
+
+<p>
+<a href='<?php echo $cfg_cmspath; ?>/wap.php'>主页</a> &gt;&gt; <?php echo $typename; ?>：
+</p>
+
+<p><img src='<?php echo $cfg_templeturl; ?>/wap/hr.gif' alt='sp line' /></p>
+
+<p>
+{dede:datalist}
+<?php
+if(preg_match('#^gb#i',$cfg_soft_lang)) $fields['title'] = gb2utf8($fields['title']);
+?>
+<a href='wap.php?action=article&amp;id=<?php echo $fields['id']; ?>'><?php echo ConvertStr($fields['title']); ?></a> [<?php echo MyDate("m-d",$fields['pubdate']); ?>]<br />
+{/dede:datalist}
+</p>
+
+<p><img src='<?php echo $cfg_templeturl; ?>/wap/hr.gif' alt='sp line' /></p>
+
+<p> {dede:pagelist listsize='2' /} </p>
+
+<p><img src='<?php echo $cfg_templeturl; ?>/wap/hr.gif' alt='sp line' /></p>
+
+<p> 相关分类：<?php echo $channellistnext; ?> </p>
+
+<p><img src='<?php echo $cfg_templeturl; ?>/wap/hr.gif' alt='sp line' /></p>
+
+<p>
+<a href='http://www.dedecms.com/wap.php'>Power by DedeCms</a> 
+Now Time: <?php echo $curtime; ?>
+</p>
+</card>
+</wml>
+*/
+?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,  maximum-scale=1.0, user-scalable=1" />
+	<title><?php echo $typename; ?>-<?php echo $cfg_webname ?></title>
+	<meta name="description" content="<?php echo $typename; ?>-<?php echo $wap_description ?>" /><meta name="keywords" content="<?php echo $typename; ?>,<?php echo $wap_keyword ?>" />
+	<!--link href="<?php echo $cfg_templeturl; ?>/wap/style.css" type="text/css" rel="stylesheet" /-->
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src='<?php echo $cfg_templeturl;?>/wap/js.js'></script>
+	<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+</head>
+<body>
+　<div data-role='page'>
+	<div data-role='header' data-theme='b' data-position='fixed'>
+		<a href='wap.php' data-icon='home' data-theme='d' data-iconpos='notext' data-transition='turn'><?php echo $typename,' - ',$cfg_webname ?></a>
+		<h1 role='heading'><?php echo $typename,' | ',$cfg_webname ?></h1>
+		 <a href='#menu-panel' data-icon='bars' data-theme='c' data-iconpos='notext'>菜单</a>
+	</div><!-- /header -->
+　　<div data-role='content'> 
+			<form action='/plus/wapsearch.php' method='get'><input type='hidden' name='mid' value='1' /><input type='hidden' name='dopost' value='search' /><input type='search' name='q' id='search' value='' placeholder='input keywords' /></form>
+　　　	<ol data-role='listview' data-inset='true'>
+			{dede:datalist}
+			<?php
+			if(eregi('^gb',$cfg_soft_lang)) $fields['title'] = gb2utf8($fields['title']);
+			?>
+			<li><a href='wap.php?action=article&amp;typeid=<?php echo $typeid; ?>&amp;id=<?php echo $fields['id']; ?>'><h3><?php echo ConvertStr($fields['title']); ?></h3><p class='ui-li-aside'>[<?php echo MyDate('m-d',$fields['pubdate']); ?>]</p></a></li>
+			{/dede:datalist}
+		</ol>
+		<div class='nav page' data-role='navbar'> <ul>{dede:pagelist listsize='2' /} </ul></div>
+		<div data-role='navbar'>
+		　　<ul>
+				<li><a href='wap.php?action=list&typeid=<?php echo $typeid; ?>' title='<?php echo $typename; ?>' class='ui-btn-active'><?php echo $typename; ?> &gt&gt</a>
+		　　	<?php echo $channellistnext; ?>
+		　　</ul>
+		</div><!-- /navbar -->
+	</div>
+
+	<div data-role='footer' data-theme='b' data-position='fixed'>
+		<div data-role='navbar' class='ui-bar'>
+			<ul>
+				<li><a href='#share-panel' data-theme='e' data-icon='back'>分享</a></li>
+				<li><a data-transition='flow' href='wap.php' data-icon='home'>主页</a></li>
+				<?php echo $channellist; ?>
+			</ul>
+		</div>
+	</div><!-- /footer -->
+
+	<div data-role='panel' id='menu-panel' data-display='overlay' data-position='right' data-theme='c'>
+
+        <ul data-role='listview' data-theme='d'>
+        	<li data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        </ul>
+
+        <hr>
+
+        <div data-role='collapsible' data-inset='false' data-iconpos='right' data-theme='e' data-content-theme='d'>
+
+          <h3>栏目列表</h3>
+
+          <div data-role='collapsible-set' data-inset='false' data-iconpos='right' data-theme='b' data-content-theme='d'>
+
+            <div data-role='collapsible'>
+
+              <h3>下级栏目</h3>
+
+              <ul data-role='listview'>
+				<li data-theme='a'><a href='wap.php?action=list&typeid=<?php echo $typeid; ?>' title='<?php echo $typename; ?>'><?php echo $typename; ?> &gt&gt</a></li><?php echo $channellistnext; ?>
+              </ul>
+
+            </div><!-- /collapsible -->
+
+            <div data-role='collapsible'>
+
+              <h3>一级栏目</h3>
+
+              <ul data-role='listview'>
+				<li><a href='wap.php' data-icon='home'>主页</a></li>
+				<?php echo $channellist; ?>
+              </ul>
+
+            </div><!-- /collapsible -->
+
+		  </div><!-- /collapsible-set -->
+
+  		</div><!-- /collapsible -->
+<?php
+include(DEDEROOT.'/templets/wap/common.inc.wml');
+echo $pageBody;
+?>
+<style>
+.title{padding:10px 0 0 10px;margin:0}
+.title h1{margin:0;padding:0;padding-bottom:10px;font-size:1.5em}
+.title p{padding:0;margin:0}
+.ui-content{padding-top:0;margin:-20px -10px -10px}
+#ad_hide{display:none}
+.ui-panel-content-wrap{margin:-1.1em 0;}
+.ui-content .ui-listview{margin:0;}
+.ui-bar{padding:0}
+</style>
+</div><!-- /page -->
+<div id='ad_hide'><script src='http://w.lzw.me/plus/ad_js.php?aid=23' language='javascript'></script></div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<?php
+require_once(DEDEINC."/wap.inc.php");
+?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<!--meta name="viewport" content="width=device-width, initial-scale=1.0,  maximum-scale=1.0, user-scalable=0" /-->
+	<title>搜索结果-<?php echo gb2utf8($cfg_webname) ?></title>
+	<meta name="description" content="<?php echo $typename; ?>-<?php echo $wap_description ?>" /><meta name="keywords" content="<?php echo $typename; ?>,<?php echo $wap_keyword ?>" />
+	<!--link href="<?php echo $cfg_templeturl; ?>/wap/style.css" type="text/css" rel="stylesheet" /-->
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+</head>
+<body>
+　<div data-role='page'>
+	<div data-role='header' data-theme='b' data-position='fixed'>
+		<a href='/wap.php' data-icon='home' data-theme='d' data-iconpos='notext' data-transition='turn'><?php echo gb2utf8($cfg_webname) ?></a>
+		<h1 role='heading'><?php echo ' 搜索结果 | ',gb2utf8($cfg_webname) ?></h1>
+		 <a href='#menu-panel' data-icon='bars' data-theme='c' data-iconpos='notext' data-shadow='false' data-iconshadow='false'>菜单</a>
+	</div><!-- /header -->
+　　<div data-role='content'> 
+		<form action='/plus/wapsearch.php' method='get'><input type='hidden' name='mid' value='1' /><input type='hidden' name='dopost' value='search' /><input type='search' name='q' id='search' value='' placeholder='input keywords' /></form>
+　　　	<ul data-role='listview' data-inset='true'>
+
+			{dede:datalist}
+			<?php
+			$fields['stime'] = GetDateTimeMk($fields['senddate']);
+			$fields['arcurl'] = GetArcUrl($fields['aid'],$fields['typeid'],$fields['senddate'],$fields['title'],$fields['ismake'],$fields['arcrank'],$fields['namerule'],$fields['typedir'],$fields['money']);
+			$fields['typeurl'] = GetTypeUrl($fields['typeid'],MfTypedir($fields['typedir']),$fields['isdefault'],$fields['defaultname'],
+						$fields['ispart'],$fields['namerule2'],$fields['moresite'],$fields['siteurl'],$fields['sitepath']);
+			?>
+
+			<?php
+			//if(eregi('^gb',$cfg_soft_lang)) $fields['title'] = gb2utf8($fields['title']);
+			?>
+			<li><a href='/wap.php?action=article&amp;typeid=<?php echo $fields['typeid']; ?>&amp;id=<?php echo $fields['aid']; ?>'><?php echo gb2utf8($fields['title']); ?><p class='ui-li-aside'>[<?php echo MyDate('y-m-d',$fields['pubdate']); ?>]</p></a></li>
+			{/dede:datalist}
+		</ul>
+		<div class='nav page' data-role='navbar'> <ul>{dede:pagelist listsize='1' /} </ul></div>
+	</div>
+
+	<div data-role='footer' data-theme='b' data-position='fixed'>
+		<div data-role='navbar' class='ui-bar'>
+			<ul>
+				<li><a href='#share-panel' data-theme='e' data-icon='back'>分享</a></li>
+				<li><a data-transition='flow' href='/wap.php' data-icon='home'>主页</a></li>
+				<?php echo $channellist; ?>
+			</ul>
+		</div>
+	</div><!-- /footer -->
+
+	<div data-role='panel' id='menu-panel' data-display='overlay' data-position='right' data-theme='c'>
+
+        <ul data-role='listview' data-theme='d'>
+        	<li data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        	<li data-theme='b' data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        </ul>
+
+<?php
+include(DEDEROOT.'/templets/wap/common.inc.wml');
+echo $pageBody;
+?>
+</div><!-- /page -->
+<style>
+.title{padding:10px 0 0 10px;margin:0}
+.title h1{margin:0;padding:0;padding-bottom:10px;font-size:1.5em}
+.title p{padding:0;margin:0}
+.ui-content{padding-top:0;margin:-20px -10px -10px}
+#ad_hide{display:none}
+.ui-panel-content-wrap{margin:-1.1em 0;}
+.ui-content .ui-listview{margin:0;}
+.ui-bar{padding:0}
+</style>
+<div id='ad_hide'><script src='http://w.lzw.me/plus/ad_js.php?aid=23' language='javascript'></script></div>
+<script src='<?php echo $cfg_templeturl;?>/wap/js.js'></script>
+</body>
+</html>

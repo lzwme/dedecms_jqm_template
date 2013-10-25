@@ -1,0 +1,137 @@
+<?php
+$varlist = "cfg_webname,title,channellist,channellistnext,cfg_templeturl,newartlist,writer,typename,body,page,Wap_Copyright,wap_keyword,wap_description";
+ConvertCharset($varlist);
+$pageBody = '<'.'?xml version="1.0" encoding="UTF-8" ?'.">\r\n";
+
+$pageBody .= "<!DOCTYPE html>
+<html lang=\"zh-CN\">
+<head>
+	<meta charset=\"utf-8\" />
+	<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=5.0,user-scalable=1\" />
+	<title>{$title}-{$cfg_webname}</title>
+	<meta name=\"description\" content=\"{$wap_description}\" /><meta name=\"keywords\" content=\"{$wap_keyword}\" />
+	<link rel=\"stylesheet\" href=\"http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css\" />
+	<script src=\"http://code.jquery.com/jquery-1.9.1.min.js\"></script>
+	<script src='{$cfg_templeturl}/wap/js.js'></script>
+	<script src=\"http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js\"></script>
+</head>
+<body>
+　<div data-role=\"page\" id='page-article'>
+	<div data-role='header' data-position='fixed' data-theme='b'>
+		<a href='javascript:history.go(-1)' data-role='button' data-theme='c' data-icon='back'>返回</a>
+		<h1 role='heading'>{$title} | {$cfg_webname}</h1>
+		<a href='#menu-panel' data-icon='bars' data-theme='c' data-iconpos='notext' data-shadow='false' data-iconshadow='false'>菜单</a>
+	</div><!-- /header -->
+　　<div data-role=\"header\" data-theme='d'>
+		<div class=\"title\"><h1>{$title}</h1><p>时间：{$pubdate} | 点击：{$click}</p> </div>
+　　</div><!-- /header -->
+　　<div data-role='content' id='content'>
+		<div class='article'>
+　　		{$body}
+		</div>
+		<p id='wap_ad_footer'></p>
+		<div class='nav page'>{$page}</div>
+		<form action='/plus/wapsearch.php' method='get'><input type='hidden' name='mid' value='1' /><input type='hidden' name='dopost' value='search' /><input type='search' name='q' id='search' value='' placeholder='input keywords' /></form>
+　　</div><!-- /content -->
+
+	<div data-role='footer' data-theme='b' data-position='fixed'>
+		<div data-role='navbar' class='ui-bar'>
+			<ul>
+				<li><a href='#share-panel' data-theme='e' data-icon='back'>分享</a></li>
+				<li><a href='wap.php' data-icon='home' data-transition='turn'>首页</a></li>
+				<li><a data-transition='flow' href='wap.php?typeid={$typeid}&action=list' data-theme='a' data-icon='star'> {$typename}</a></li>
+				<li><a data-transition='none' href='wap.php?action=article&typeid=" . $typeid . "&id=" . $next_arc_id . "' data-icon='arrow-l'>上一条</a></li>
+				<li><a data-transition='none' href='wap.php?action=article&typeid=" . $typeid . "&id=" . $prev_arc_id . "' data-icon='arrow-r'>下一条</a></li>
+			</ul>
+		</div>
+	</div><!-- /footer -->
+
+	<div data-role='panel' id='menu-panel' data-display='overlay' data-position='right' data-theme='c'>
+
+        <ul data-role='listview' data-theme='d'>
+        	<li data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        	<li></li>
+        </ul>
+
+        <div data-role='collapsible' data-inset='false' data-iconpos='right' data-theme='e' data-content-theme='d'>
+
+          <h3>栏目列表</h3>
+
+          <div data-role='collapsible-set' data-inset='false' data-iconpos='right' data-theme='b' data-content-theme='d'>
+
+            <div data-role='collapsible'>
+
+              <h3>同级栏目</h3>
+
+              <ul data-role='listview'>
+				<li data-theme='a'><a href='wap.php?action=list&typeid={$typeid}' title='{$typename}'>{$typename} &gt&gt</a></li>{$channellistnext}
+              </ul>
+
+            </div><!-- /collapsible -->
+
+            <div data-role='collapsible'>
+
+              <h3>一级栏目</h3>
+
+              <ul data-role='listview'>
+				<li><a href='wap.php' data-icon='home'>主页</a></li>
+				{$channellist}
+              </ul>
+
+            </div><!-- /collapsible -->
+
+		  </div><!-- /collapsible-set -->
+
+  		</div><!-- /collapsible -->
+";
+include(DEDEROOT.'/templets/wap/common.inc.wml');
+$pageBody .= "
+<style>
+.title{padding:0.2em 1em;margin:0 0 -1em 0}
+.title h1{margin:0;padding:0;padding-bottom:10px;font-size:1.2em}
+.title p{padding:0;margin:0}
+#page-article .ui-panel-content-wrap{margin:-1.1em 0;}
+#page-article .ui-content{padding-top:0;padding-bottom:0;margin:-1.5em 0}
+#page-article .ui-field-contain{margin:0.5em 0}
+#page-article #ad_hide{display:none}
+#page-article .ui-bar{padding:0}
+</style>
+　</div><!-- /page -->
+<div id='ad_hide'><script src='http://w.lzw.me/plus/ad_js.php?aid=23' language='javascript'></script></div>
+</body>
+</html>
+	";
+
+/*
+<?php
+$varlist = "cfg_webname,title,channellist,cfg_templeturl,newartlist,writer,typename,body,page,Wap_Copyright,wap_keyword,wap_description";
+ConvertCharset($varlist);
+$pageBody = '<'.'?xml version=\"1.0\" encoding=\"UTF-8\" ?'.\">\r\n\";
+$pageBody .="<!DOCTYPE html PUBLIC \"-//WAPFORUM//DTD XHTML Mobile 1.0//EN\" \"http://www.wapforum.org/DTD/xhtml-mobile10.dtd\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\">
+<head>
+<meta http-equiv=\"Cache-Control\" content=\"public\"/>
+<meta content=\"mobiSiteGalore\" name=\"Generator\" />
+<title>{$title}--{$cfg_webname}</title>
+<meta name=\"description\" content=\"{$wap_description}\" /><meta name=\"keywords\" content=\"{$wap_keyword}\" />
+<link href=\"{$cfg_templeturl}/wap/style.css\" type=\"text/css\" rel=\"stylesheet\" />
+</head>
+<body>
+<div class=\"header\"><img src=\"{$cfg_templeturl}/wap/logo.gif\" alt=\"{$cfg_webname}\" /></div>
+<div class=\"top\"><a href=\"wap.php\">主页</a> {$channellist}</div>
+<div class=\"navbar\"><a href=\"wap.php\">主页</a> &gt;&gt;<a href=\"wap.php?id={$typeid}&amp;action=list\">{$typename}</a></div>
+<div class=\"nav\"><h1>{$title}</h1>时间：{$pubdate}<br/>点击：{$click} </div>
+<div class=\"body\">
+<!-- 内容开始 -->
+{$body}
+<!-- 内容结束 -->
+</div>
+<div class=\"nav page\">{$page}</div>
+<div class=\"navbar1\">栏目：<a href='wap.php?id={$typeid}&action=list'>{$typename}</a></div>
+<div class=\"navbar\"><a href='wap.php'>主页</a> {$channellist}</div>
+<div class=\"footer\">[{$curtime}]</div>
+<hr />
+</body>
+</html>
+\";*/
+?>

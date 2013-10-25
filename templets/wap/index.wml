@@ -1,0 +1,108 @@
+<?php
+$varlist = 'cfg_webname,channellist,cfg_templeturl,newartlist,Wap_templeturl,ads_google,wap_keyword,wap_description';
+ConvertCharset($varlist);
+//$pageBody = '<' . '?xml version="1.0" encoding="UTF-8" ?' . '>\r\n';
+$pageBody .= "<!DOCTYPE html>
+<html lang=\"zh-CN\">
+<head>
+	<meta charset=\"UTF-8\" />
+	<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,  maximum-scale=1.0, user-scalable=1\" />
+	<title>{$cfg_webname}-主页</title>
+	<meta name=\"description\" content=\"{$wap_description}\" /><meta name=\"keywords\" content=\"{$wap_keyword}\" />
+	<link rel=\"stylesheet\" href=\"http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css\" />
+	<script src=\"http://code.jquery.com/jquery-1.9.1.min.js\"></script>
+	<script src='{$cfg_templeturl}/wap/js.js'></script>
+	<script src=\"http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js\"></script>
+</head>
+<body>
+　<div data-role=\"page\">
+	<div data-role='header' data-theme='b' data-position='fixed'>
+		<a href='wap.php' data-theme='d' data-icon='home' data-iconpos='notext' data-transition='turn'><?php echo $typename,' - ',$cfg_webname ?></a>
+		<h1 role='heading'>{$cfg_webname}</h1>
+		 <a href='#menu-panel' data-icon='bars' data-theme='d' data-iconpos='notext'>菜单</a>
+	</div><!-- /header -->
+　　<div data-role=\"content\">
+			<form action='/plus/wapsearch.php' method='get'><input type='hidden' name='mid' value='1' /><input type='hidden' name='dopost' value='search' /><input type='search' name='q' id='search' value='' placeholder='input keywords' /></form>
+		<ol data-role=\"listview\" data-inset=\"true\">
+		{$newartlist}
+		</ol>
+		<div class='navigation' data-role='controlgroup'>";
+if($p_prev_a) $pageBody .= "
+			<div class='next-posts'><a href='{$p_prev_a}' data-role='button' data-icon='arrow-l' data-transition='none'>上一页</a></div>";
+$pageBody .= "<div class='prev-posts'><a href='{$p_next_a}' data-role='button' data-icon='arrow-r' data-transition='none'>下一页</a></div>
+		</div>
+　　</div><!-- /content -->
+
+	<div data-role='footer' data-theme='b' data-position='fixed'>
+		<div data-role='navbar' class='ui-bar'>
+			<ul>
+				<li><a href='#share-panel' data-theme='e' data-icon='back'>分享</a></li>
+				<li><a href='wap.php' data-icon='home'>主页</a></li>
+				{$channellist}
+			</ul>
+		</div>
+	</div><!-- /footer -->
+
+	<div data-role='panel' id='menu-panel' data-display='overlay' data-position='right' data-theme='c'>
+
+        <ul data-role='listview' data-theme='d'>
+        	<li data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        </ul>
+        <hr>
+        <div data-role='collapsible' data-inset='false' data-iconpos='right' data-theme='e' data-content-theme='d'>
+
+
+              <h3>一级栏目</h3>
+
+              <ul data-role='listview'>
+				<li><a href='wap.php' data-icon='home'>主页</a></li>
+				{$channellist}
+              </ul>
+
+  		</div><!-- /collapsible -->";
+  		
+include(DEDEROOT.'/templets/wap/common.inc.wml');
+$pageBody .= "
+<style>
+.title{padding:10px 0 0 10px;margin:0}
+.title h1{margin:0;padding:0;padding-bottom:10px;font-size:1.5em}
+.title p{padding:0;margin:0}
+.ui-content{padding-top:0;margin:-20px -10px}
+#ad_hide{display:none}
+.ui-bar{padding:0}
+</style>
+	</div><!-- /page -->
+    <div id='ad_hide'><script src='http://w.lzw.me/plus/ad_js.php?aid=23' language='javascript'></script></div>
+</body>
+</html>
+";
+
+/*
+$pageBody .="<!DOCTYPE html PUBLIC \"-//WAPFORUM//DTD XHTML Mobile 1.0//EN\" \"http://www.wapforum.org/DTD/xhtml-mobile10.dtd\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\">
+<head>
+<meta http-equiv=\"Cache-Control\" content=\"public\"/>
+<meta content=\"mobiSiteGalore\" name=\"Generator\" />
+<title>{$cfg_webname}--主页</title>
+<meta name=\"description\" content=\"{$wap_description}\" /><meta name=\"keywords\" content=\"{$wap_keyword}\" />
+<link href=\"{$Wap_templeturl}style.css\" type=\"text/css\" rel=\"stylesheet\" />
+</head>
+<body>
+<div class=\"header\"><img src=\"{$Wap_templeturl}Logo.png\" alt=\"{$cfg_webname}\" width=\"200px\" height=\"60px\" /></div>
+<div class=\"top\"><a href=\"index.php\">主页</a> {$channellist}</div>
+<div class=\"navbar\">最新消息：</div>
+<ul class=\"list\">
+	{$newartlist}
+</ul>
+{$ads_google}
+<div class=\"footer\">
+版式：{$Wap_Stylestr}<br/>
+{$Wap_Copyright}
+<br/>
+[{$curtime}]
+</div>
+<hr />
+</body>
+</html>
+";*/
+?>
