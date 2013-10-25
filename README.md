@@ -14,6 +14,7 @@ dedecms基于移动端的 wap 模板更是非常的少，志文工作室在搜�
 ----------------------------
 
 解压缩下载的压缩包，复制到根目录进行替换即可。
+
 访问：http://网址/wap.php
 
 注意事项：
@@ -29,7 +30,11 @@ dedecms基于移动端的 wap 模板更是非常的少，志文工作室在搜�
 相关：
 ----------------------------
 站点：http://w.lzw.me        http://lzw.me
+
 演示：http://w.lzw.me/wap
+
 支持：http://lzw.me/a/dedecms-wap-templet-jquery-mobile.html
+
 作者：@任侠 @志文工作室
+
 日期：2013-10-25 20:40
