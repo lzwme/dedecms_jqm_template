@@ -7,7 +7,8 @@ $pageBody .= "        <hr>
         	<li data-icon='arrow-r'><a id='mp-forward' href='#demo-intro'>前进一页</a></li>
         	<li data-icon='refresh'><a href='javascript:window.location.reload()'>刷新本页</a></li>
         	<li data-icon='star'><a href='#share-panel'>分享本页</a></li>
-        	<li data-icon='star'><a href='#about-panel'>关于本站</a></li>
+            <li data-icon='star'><a href='#fav-panel'>我的收藏</a></li>
+            <li data-icon='star'><a href='#about-panel'>关于本站</a></li>
             <li data-theme='b' data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
         </ul>
 
@@ -23,6 +24,25 @@ $pageBody .= "        <hr>
 
     </div><!-- /panel -->
 
+    <!-- fav-panel -->
+    <div data-role='panel' id='fav-panel' data-display='overlay' data-position='right' data-theme='a'>
+
+      <ul data-role='listview' data-theme='a'>
+        <li data-icon='back'><a href='#' data-rel='close'>关闭菜单</a></li>
+        <li></li>
+      </ul>
+      <hr>
+
+        <ul data-role='listview' data-icon='false' id='favList'>
+          <li><a href=''>暂无收藏</a></li>
+        </ul>
+
+      <ul data-role='listview' data-icon='false'>
+        <li data-icon='alert' data-theme='b'><a href='#' id='favRemoveAll'>全部清除</a></li>
+        <li data-icon='back'><a href='#' data-rel='close'>关闭菜单</a></li>
+      </ul>
+    </div><!-- /fav-panel -->
+
 	<div data-role='panel' data-display='overlay' data-theme='c' id='about-panel'>
 		<h4>关于</h4>
 		<p>{$cfg_webname} 移动版</p>
@@ -37,9 +57,5 @@ $pageBody .= "        <hr>
 		var webname='{$cfg_webname}[jqm移动版]';
 		var title='{$title} | {$cfg_webname}[jqm移动版]';
 		var es_tit = escape(title);
-		var urls = document.location;
-		var loca = escape( document.location);
-		var host = urls.toString().replace(/\?(.*)/, '');
-		var pic=$('.article img:first').attr('src') || '';
 	</script>";
 ?>

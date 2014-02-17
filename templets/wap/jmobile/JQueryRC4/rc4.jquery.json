@@ -1,0 +1,35 @@
+{
+    "name": "rc4",
+    "title": "jQuery RC4",
+    "description": "jQuery plugin for using RC4 encryption.",
+    "keywords": [
+        "rc4",
+        "encryption",
+        "encrypt"
+    ],
+    "version": "1.0.0",
+    "author": {
+        "name": "Tony Simek",
+        "url": "https://github.com/tony41780/JQueryRC4"
+    },
+    "maintainers": [
+        {
+            "name": "Tony Simek",
+            "email": "tony.simek@gmail.com",
+            "url": "http://www.tonysimek.com"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/tony41780/JQueryRC4/blob/master/MIT-LICENSE.txt"
+        }
+    ],
+    "bugs": "https://github.com/tony41780/JQueryRC4/issues",
+    "homepage": "https://github.com/tony41780/JQueryRC4/",
+    "docs": "https://github.com/tony41780/JQueryRC4/wiki/JQuery-RC4-Encryption",
+    "download": "https://github.com/tony41780/JQueryRC4/blob/master/JQueryRC4.js",
+    "dependencies": {
+        "jquery": ">=1.2.4"
+    }
+}

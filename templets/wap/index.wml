@@ -10,10 +10,13 @@ $pageBody .= "<!DOCTYPE html>
 	<title>{$cfg_webname}-主页</title>
 	<meta name=\"description\" content=\"{$wap_description}\" /><meta name=\"keywords\" content=\"{$wap_keyword}\" />
 	<link rel=\"stylesheet\" href=\"http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css\" />
-	<script src=\"http://code.jquery.com/jquery-1.9.1.min.js\"></script>
+
+	<script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+	<script src='{$cfg_templeturl}/wap/jmobile/JQueryRC4/JQueryRC4.js'></script>
 	<script src='{$cfg_templeturl}/wap/js.js'></script>
-	<script src=\"http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js\"></script>
-</head>
+	
+	<script src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js'></script>
+	</head>
 <body>
 　<div data-role=\"page\">
 	<div data-role='header' data-theme='b' data-position='fixed'>
@@ -36,7 +39,7 @@ $pageBody .= "<div class='prev-posts'><a href='{$p_next_a}' data-role='button' d
 	<div data-role='footer' data-theme='b' data-position='fixed'>
 		<div data-role='navbar' class='ui-bar'>
 			<ul>
-				<li><a href='#share-panel' data-theme='e' data-icon='back'>分享</a></li>
+				<li><a data-icon='star' data-theme='e' href='#fav-panel'>收藏</a></li>
 				<li><a href='wap.php' data-icon='home'>主页</a></li>
 				{$channellist}
 			</ul>
@@ -76,33 +79,4 @@ $pageBody .= "
 </body>
 </html>
 ";
-
-/*
-$pageBody .="<!DOCTYPE html PUBLIC \"-//WAPFORUM//DTD XHTML Mobile 1.0//EN\" \"http://www.wapforum.org/DTD/xhtml-mobile10.dtd\">
-<html xmlns=\"http://www.w3.org/1999/xhtml\">
-<head>
-<meta http-equiv=\"Cache-Control\" content=\"public\"/>
-<meta content=\"mobiSiteGalore\" name=\"Generator\" />
-<title>{$cfg_webname}--主页</title>
-<meta name=\"description\" content=\"{$wap_description}\" /><meta name=\"keywords\" content=\"{$wap_keyword}\" />
-<link href=\"{$Wap_templeturl}style.css\" type=\"text/css\" rel=\"stylesheet\" />
-</head>
-<body>
-<div class=\"header\"><img src=\"{$Wap_templeturl}Logo.png\" alt=\"{$cfg_webname}\" width=\"200px\" height=\"60px\" /></div>
-<div class=\"top\"><a href=\"index.php\">主页</a> {$channellist}</div>
-<div class=\"navbar\">最新消息：</div>
-<ul class=\"list\">
-	{$newartlist}
-</ul>
-{$ads_google}
-<div class=\"footer\">
-版式：{$Wap_Stylestr}<br/>
-{$Wap_Copyright}
-<br/>
-[{$curtime}]
-</div>
-<hr />
-</body>
-</html>
-";*/
 ?>

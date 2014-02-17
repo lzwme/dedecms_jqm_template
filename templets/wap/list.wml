@@ -50,9 +50,11 @@ Now Time: <?php echo $curtime; ?>
 	<meta name="description" content="<?php echo $typename; ?>-<?php echo $wap_description ?>" /><meta name="keywords" content="<?php echo $typename; ?>,<?php echo $wap_keyword ?>" />
 	<!--link href="<?php echo $cfg_templeturl; ?>/wap/style.css" type="text/css" rel="stylesheet" /-->
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	
+	<script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+	<script src='<?php echo $cfg_templeturl;?>/wap/jmobile/JQueryRC4/JQueryRC4.js'></script>
 	<script src='<?php echo $cfg_templeturl;?>/wap/js.js'></script>
-	<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+	<script src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js'></script>
 </head>
 <body>
 　<div data-role='page'>
@@ -83,7 +85,7 @@ Now Time: <?php echo $curtime; ?>
 	<div data-role='footer' data-theme='b' data-position='fixed'>
 		<div data-role='navbar' class='ui-bar'>
 			<ul>
-				<li><a href='#share-panel' data-theme='e' data-icon='back'>分享</a></li>
+				<li><a data-icon='star' data-theme='e' href='#fav-panel'>收藏</a></li>
 				<li><a data-transition='flow' href='wap.php' data-icon='home'>主页</a></li>
 				<?php echo $channellist; ?>
 			</ul>
