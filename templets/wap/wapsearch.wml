@@ -4,14 +4,12 @@ require_once(DEDEINC."/wap.inc.php");
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<meta charset="utf-8" />
-	<!--meta name="viewport" content="width=device-width, initial-scale=1.0,  maximum-scale=1.0, user-scalable=0" /-->
 	<title>搜索结果-<?php echo gb2utf8($cfg_webname) ?></title>
 	<meta name="description" content="<?php echo $typename; ?>-<?php echo $wap_description ?>" /><meta name="keywords" content="<?php echo $typename; ?>,<?php echo $wap_keyword ?>" />
-	<!--link href="<?php echo $cfg_templeturl; ?>/wap/style.css" type="text/css" rel="stylesheet" /-->
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+	<?php 
+	include(DEDEROOT.'/templets/wap_m_inc/head.inc.wml');
+	echo $headInc;
+	?>
 </head>
 <body>
 　<div data-role='page'>
@@ -20,8 +18,12 @@ require_once(DEDEINC."/wap.inc.php");
 		<h1 role='heading'><?php echo ' 搜索结果 | ',gb2utf8($cfg_webname) ?></h1>
 		 <a href='#menu-panel' data-icon='bars' data-theme='c' data-iconpos='notext' data-shadow='false' data-iconshadow='false'>菜单</a>
 	</div><!-- /header -->
-　　<div data-role='content'> 
-		<form action='/plus/wapsearch.php' method='get'><input type='hidden' name='mid' value='1' /><input type='hidden' name='dopost' value='search' /><input type='search' name='q' id='search' value='' placeholder='input keywords' /></form>
+　　<div data-role='content'>
+		<form action='/plus/wapsearch.php' method='get'>
+			<input type='hidden' name='mid' value='1' />
+			<input type='hidden' name='dopost' value='search' />
+			<input type='search' name='q' id='search' value='' placeholder='input keywords' />
+		</form>
 　　　	<ul data-role='listview' data-inset='true'>
 
 			{dede:datalist}
@@ -59,21 +61,11 @@ require_once(DEDEINC."/wap.inc.php");
         </ul>
 
 <?php
-include(DEDEROOT.'/templets/wap/common.inc.wml');
+include(DEDEROOT.'/templets/wap_m_inc/common.inc.wml');
 echo $pageBody;
 ?>
 </div><!-- /page -->
-<style>
-.title{padding:10px 0 0 10px;margin:0}
-.title h1{margin:0;padding:0;padding-bottom:10px;font-size:1.5em}
-.title p{padding:0;margin:0}
-.ui-content{padding-top:0;margin:-20px -10px -10px}
-#ad_hide{display:none}
-.ui-panel-content-wrap{margin:-1.1em 0;}
-.ui-content .ui-listview{margin:0;}
-.ui-bar{padding:0}
-</style>
 <div id='ad_hide'><script src='http://w.lzw.me/plus/ad_js.php?aid=23' language='javascript'></script></div>
-<script src='<?php echo $cfg_templeturl;?>/wap/js.js'></script>
+<script src='<?php echo $cfg_templeturl;?>/asset/js.js'></script>
 </body>
 </html>

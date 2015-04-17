@@ -1,0 +1,87 @@
+<?php
+$varlist = 'cfg_webname,cfg_templeturl,channellist,newartlist,Wap_templeturl,ads_google,wap_keyword,wap_description';
+ConvertCharset_custom($varlist);
+$_channellist = $_newartlist = '';
+
+foreach ($channellist as $key => $value) {
+	$_channellist .= "<li><a data-icon='grid' href='/m/list/" . $channellist[$key]['typeid'] . "'>" . $channellist[$key]['typename'] . "</a></li> ";
+}
+
+foreach ($newartlist as $key => $value) {
+	$_newartlist .= "<li><a href='/m/" . $newartlist[$key]['action'] . "/" . $newartlist[$key]['typeid'] . "/" . $newartlist[$key]['id'] . "'><h3>". $newartlist[$key]['title'] ."</h3> <p class='ui-li-aside'>[".date("m-d",$newartlist[$key]['pubdate'])."]</p><span class='ui-li-count'>" . $newartlist[$key]['click'] . "</span></a></li>";
+}
+
+$p_next_a = "/m/p/". ($p+1) ."/{$pz}";
+if($p > 1) $p_prev_a = "/m/p/". ($p-1) ."/{$pz}";
+
+include(DEDEROOT.'/templets/wap_m_inc/head.inc.wml');
+
+$pageBody .= "<!DOCTYPE html>
+<html lang=\"zh-CN\">
+<head>
+	<title>{$cfg_webname}-主页</title>
+    <meta name='description' content='{$wap_description}' /><meta name='keywords' content='{$wap_keyword}' />
+
+	{$headInc}
+	</head>
+<body>
+　<div data-role=\"page\">
+	<div data-role='header' data-position='fixed'>
+		<a href='/m' data-icon='home' data-iconpos='notext' data-transition='turn'><?php echo $typename,' - ',$cfg_webname ?></a>
+		<h1 role='heading'>{$cfg_webname}</h1>
+		 <a href='#menu-panel' data-icon='bars' data-iconpos='notext'>菜单</a>
+	</div><!-- /header -->
+　　<div data-role=\"content\">
+			<form action='/plus/wapsearch.php' method='get'>
+				<input type='hidden' name='mid' value='1' />
+				<input type='hidden' name='tmpldir' value='m' />
+				<input type='hidden' name='dopost' value='search' />
+				<input type='search' name='q' id='search' value='' placeholder='input keywords' />
+			</form>
+		<ol data-role=\"listview\" data-inset=\"true\">
+		{$_newartlist}
+		</ol>
+		<div class='navigation' data-role='controlgroup'>";
+if($p_prev_a) $pageBody .= "
+			<div class='next-posts'><a href='{$p_prev_a}' data-role='button' data-icon='arrow-l' data-transition='none'>上一页</a></div>";
+$pageBody .= "<div class='prev-posts'><a href='{$p_next_a}' data-role='button' data-icon='arrow-r' data-transition='none'>下一页</a></div>
+		</div>
+　　</div><!-- /content -->
+
+	<div data-role='footer' data-position='fixed'>
+		<div data-role='navbar' class='ui-bar'>
+			<ul>
+				<li><a data-icon='star' data-theme='e' href='#fav-panel'>收藏</a></li>
+				<!--li><a href='/m' data-icon='home'>主页</a></li-->
+				{$_channellist}
+			</ul>
+		</div>
+	</div><!-- /footer -->
+
+	<div data-role='panel' id='menu-panel' data-display='overlay' data-position='right'>
+
+        <ul data-role='listview'>
+        	<li data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        </ul>
+        <hr>
+        <div data-role='collapsible' data-inset='false' data-iconpos='right'>
+
+
+              <h3>一级栏目</h3>
+
+              <ul data-role='listview'>
+				<li><a href='/m' data-icon='home'>主页</a></li>
+				{$_channellist}
+              </ul>
+
+  		</div><!-- /collapsible -->";
+  		
+include(DEDEROOT.'/templets/wap_m_inc/common.inc.wml');
+
+$pageBody .= "
+	</div><!-- /page -->
+    <div id='ad_hide'><script src='http://w.lzw.me/plus/ad_js.php?aid=23' language='javascript'></script></div>
+</body>
+</html>
+";
+?>

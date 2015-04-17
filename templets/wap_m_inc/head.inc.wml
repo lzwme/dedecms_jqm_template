@@ -1,0 +1,50 @@
+<?php
+$headInc .= " <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0,  maximum-scale=1.0, user-scalable=1' />
+    
+    <link rel='stylesheet' href='{$cfg_templeturl}/asset/jmobile/themes/lzw_dede_wap.min.css' />
+    <link rel='stylesheet' href='{$cfg_templeturl}/asset/jmobile/themes/jquery.mobile.icons.min.css' />
+    <link rel='stylesheet' href='http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css' />
+    
+    <script src='http://code.jquery.com/jquery-1.11.1.min.js'></script>
+    <script src='{$cfg_templeturl}/asset/JQueryRC4/JQueryRC4.js'></script>
+    <script src='{$cfg_templeturl}/asset/js.js'></script>
+    <script src='http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js'></script>
+
+
+    <link rel=\"stylesheet\" href=\"{$cfg_templeturl}/asset/photoswipe/photoswipe.css\" />
+    <link rel=\"stylesheet\" href=\"{$cfg_templeturl}/asset/photoswipe/default-skin/default-skin.css\" />
+
+    <script src='{$cfg_templeturl}/asset/photoswipe/photoswipe.min.js'></script>
+    <script src='{$cfg_templeturl}/asset/photoswipe/photoswipe-ui-default.min.js'></script>
+    <style>
+    form{width: 99%;margin: auto;}
+
+    #content .title{padding:10px 0 0 10px;margin:0}
+    #content .title h1{margin:0;padding:0;padding-bottom:10px;font-size:1.5em}
+    #content .title p{padding:0;margin:0}
+
+    /*#content .images{padding:0.2em 1em;margin-top: 1.5em;height:100%}
+    #content .images h1{margin:0;padding:0;padding-bottom:10px;font-size:1.2em}
+    #content .images p{padding:0;margin:0}*/
+
+    .ui-panel-wrapper{margin:-1.1em 0;}
+    .ui-field-contain{margin:0.5em 0}
+
+    .ui-content{padding-top:0;margin:-5px -10px -2em -10px}
+    .ui-content .ui-listview{margin:0;}
+    .ui-loading .ui-loader {background: #333;color: #fff;}
+    .ui-bar{padding:0}
+
+    #ad_hide{display:none}
+
+    .pagelistbox a, .pagelistbox span, .pagelistbox strong {
+        float: left;
+        height: 20px;
+        display: inline-block;
+        padding: 8px 15px;
+        margin: 5px;
+        border: 1px solid #ddd;
+    }
+    </style>";
+?>

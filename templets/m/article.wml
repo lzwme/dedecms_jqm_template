@@ -1,0 +1,165 @@
+<?php
+
+$varlist = "cfg_webname,title,channellist,channellistnext,cfg_templeturl,writer,typename,body,page,Wap_Copyright,wap_keyword,wap_description";
+
+ConvertCharset_custom($varlist);
+//channellist,channellistnext,newartlist 格式化
+$_channellist = $_channellistnext = '';
+
+foreach ($channellistnext as $key => $value) {
+	$_channellistnext .= "<li><a href='/m/list/" . $channellistnext[$key]['typeid'] . "'>" . $channellistnext[$key]['typename'] . "</a></li> ";
+}
+
+foreach ($channellist as $key => $value) {
+	$_channellist .= "<li><a href='/m/list/" . $channellist[$key]['typeid'] . "'>" . $channellist[$key]['typename'] . "</a></li> ";
+}
+
+include(DEDEROOT.'/templets/wap_m_inc/head.inc.wml');
+
+$pageBody .= "<!DOCTYPE html>
+<html lang=\"zh-CN\">
+<head>
+	<title>{$title}-{$cfg_webname}</title>
+	<meta name=\"description\" content=\"{$wap_description}\" /><meta name=\"keywords\" content=\"{$wap_keyword}\" />
+	{$headInc}
+</head>
+<body>
+　<div data-role='page' id='page-article' class='ui-page-header-fixed ui-page-footer-fixed'>
+	<div data-role='header' data-position='fixed'>
+		<a href='javascript:history.go(-1)' data-role='button' data-icon='back'>返回</a>
+		<h1 role='heading'>{$title} | {$cfg_webname}</h1>
+		<a href='#menu-panel' data-icon='bars' data-iconpos='notext' data-shadow='false' data-iconshadow='false'>菜单</a>
+	</div><!-- /header -->
+　　<div data-role='header' data-theme='a'>
+		<div class='title'><h1>{$title}</h1><p>时间：{$pubdate} | 点击：{$click}</p> </div>
+　　</div><!-- /header -->
+　　<div data-role='content' id='content'>
+		<div class='article'>
+			{$imgContent}
+　　		{$body}
+		</div>
+		<p id='wap_ad_footer'></p>
+		<div class='nav page'>{$page}</div>
+		<a data-role='button' href='#' title='{$title}' id='favAdd'>加入收藏</a>
+		<form action='/plus/wapsearch.php' method='get'>
+			<input type='hidden' name='mid' value='{$mid}' />
+			<input type='hidden' name='tmpldir' value='m' />
+			<input type='hidden' name='dopost' value='search' />
+			<input type='search' name='q' id='search' value='' placeholder='input keywords' />
+		</form>
+　　</div><!-- /content -->
+
+	<div data-role='footer' data-position='fixed'>
+		<div data-role='navbar' class='ui-bar'>
+			<ul>
+				<li><a data-icon='star' data-theme='e' href='#fav-panel'>收藏</a></li>
+				<li><a href='/m' data-icon='home' data-transition='turn'>首页</a></li>
+				<li><a data-transition='flow' href='/m/list/{$typeid}' data-theme='a' data-icon='star'> {$typename}</a></li>
+				<li><a data-transition='none' href='/m/article/" . $typeid . "/" . $next_arc_id . "' data-icon='arrow-l'>上一条</a></li>
+				<li><a data-transition='none' href='/m/article/" . $typeid . "/" . $prev_arc_id . "' data-icon='arrow-r'>下一条</a></li>
+			</ul>
+		</div>
+	</div><!-- /footer -->
+
+	<div data-role='panel' id='menu-panel' data-display='overlay' data-position='right'>
+
+        <ul data-role='listview'>
+        	<li data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        	<li></li>
+        </ul>
+
+        <div data-role='collapsible' data-inset='false' data-iconpos='right'>
+
+          <h3>栏目列表</h3>
+
+          <div data-role='collapsible-set' data-inset='false' data-iconpos='right'>
+
+            <div data-role='collapsible'>
+
+              <h3>同级栏目</h3>
+
+              <ul data-role='listview'>
+				<li data-theme='e'><a href='/m/list/{$typeid}' title='{$typename}'>{$typename} &gt&gt</a></li>{$_channellistnext}
+              </ul>
+
+            </div><!-- /collapsible -->
+
+            <div data-role='collapsible'>
+
+              <h3>一级栏目</h3>
+
+              <ul data-role='listview'>
+				<li><a href='/m' data-icon='home'>主页</a></li>
+				{$_channellist}
+              </ul>
+
+            </div><!-- /collapsible -->
+
+		  </div><!-- /collapsible-set -->
+
+  		</div><!-- /collapsible -->
+";
+
+
+include(DEDEROOT.'/templets/wap_m_inc/common.inc.wml');
+$pageBody .= '
+<div id="gallery" class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+
+      <div class="pswp__container">
+		<div class="pswp__item"></div>
+		<div class="pswp__item"></div>
+		<div class="pswp__item"></div>
+      </div>
+
+      <div class="pswp__ui pswp__ui--hidden">
+
+        <div class="pswp__top-bar">
+
+			<div class="pswp__counter"></div>
+
+			<a class="pswp__button pswp__button--close" title="关闭 (Esc)"></a>
+
+			<a class="pswp__button pswp__button--share" title="分享"></a>
+
+			<a class="pswp__button pswp__button--fs" title="全屏"></a>
+
+			<a class="pswp__button pswp__button--zoom" title="Zoom in/out"></a>
+
+			<div class="pswp__preloader">
+				<div class="pswp__preloader__icn">
+				  <div class="pswp__preloader__cut">
+				    <div class="pswp__preloader__donut"></div>
+				  </div>
+				</div>
+			</div>
+        </div>
+
+		<!-- <div class="pswp__loading-indicator"><div class="pswp__loading-indicator__line"></div></div> -->
+
+        <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+            <div class="pswp__share-tooltip">
+				<!-- <a href="#" class="pswp__share--facebook"></a>
+				<a href="#" class="pswp__share--twitter"></a>
+				<a href="#" class="pswp__share--pinterest"></a>
+				<a href="#" download class="pswp__share--download"></a> -->
+            </div>
+        </div>
+
+        <a class="pswp__button pswp__button--arrow--left" title="上一张 (arrow left)"></a>
+        <a class="pswp__button pswp__button--arrow--right" title="下一张 (arrow right)"></a>
+        <div class="pswp__caption">
+          <div class="pswp__caption__center">
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+　</div><!-- /page -->
+<div id="ad_hide"><script src="http://w.lzw.me/plus/ad_js.php?aid=23"></script></div>
+</body>
+</html>';
+?>

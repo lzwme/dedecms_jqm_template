@@ -1,0 +1,110 @@
+<?php
+$_channellist = $_channellistnext = '';
+
+foreach ($channellist as $key => $value) {
+	$_channellist .= "<li><a data-icon='grid' href='/m/list/" . $channellist[$key]['typeid'] . "'>" . $channellist[$key]['typename'] . "</a></li> ";
+}
+
+foreach ($channellistnext as $key => $value) {
+	$_channellistnext .= "<li><a href='/m/list/" . $channellistnext[$key]['typeid'] . "'>" . $channellistnext[$key]['typename'] . "</a></li> ";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title><?php echo $typename; ?>-<?php echo $cfg_webname ?></title>
+	<meta name="description" content="<?php echo $typename; ?>-<?php echo $wap_description ?>" /><meta name="keywords" content="<?php echo $typename; ?>,<?php echo $wap_keyword ?>" />
+	<?php
+		include(DEDEROOT.'/templets/wap_m_inc/head.inc.wml');
+		echo $headInc;
+	?>
+</head>
+<body>
+　<div data-role='page'>
+	<div data-role='header' data-position='fixed'>
+		<a href='/m' data-icon='home' data-theme='d' data-iconpos='notext' data-transition='turn'><?php echo $typename,' - ',$cfg_webname ?></a>
+		<h1 role='heading'><?php echo $typename,' | ',$cfg_webname ?></h1>
+		 <a href='#menu-panel' data-icon='bars' data-iconpos='notext'>菜单</a>
+	</div><!-- /header -->
+　　<div role='main' class='ui-content'>
+		<form action='/plus/wapsearch.php' method='get'>
+			<input type='hidden' name='tmpldir' value='m' />
+			<input type='hidden' name='mid' value='1' />
+			<input type='hidden' name='dopost' value='search' />
+			<input type='search' name='q' id='search' value='' placeholder='input keywords' />
+		</form>
+　　　	<ol data-role='listview' data-inset='true'>
+			{dede:datalist}
+			<?php
+			if(eregi('^gb',$cfg_soft_lang)) $fields['title'] = gb2utf8($fields['title']);
+			?>
+			<li><a href='/m/<?php echo $channeltype;?>/<?php echo $typeid; ?>/<?php echo $fields['id']; ?>'><h3><?php echo ConvertStr($fields['title']); ?></h3><p class='ui-li-aside'>[<?php echo MyDate('m-d',$fields['pubdate']); ?>]</p></a></li>
+			{/dede:datalist}
+		</ol>
+		<div class='nav page' data-role='navbar'> <ul>{dede:pagelist listsize='2' /} </ul></div>
+		<div data-role='navbar'>
+		　　<ul>
+				<li><a href='/m/list/<?php echo $typeid; ?>' title='<?php echo $typename; ?>' class='ui-btn-active'><?php echo $typename; ?> &gt&gt</a></li>
+		　　	<?php echo $_channellistnext; ?>
+		　　</ul>
+		</div><!-- /navbar -->
+	</div>
+
+	<div data-role='footer' data-position='fixed'>
+		<div data-role='navbar' class='ui-bar'>
+			<ul>
+				<li><a data-icon='star' data-theme='e' href='#fav-panel'>收藏</a></li>
+				<!--li><a data-transition='flow' href='/m' data-icon='home'>主页</a></li-->
+				<?php echo $_channellist; ?>
+			</ul>
+		</div>
+	</div><!-- /footer -->
+
+	<div data-role='panel' id='menu-panel' data-display='overlay' data-position='right' data-theme='c'>
+
+        <ul data-role='listview' data-theme='d'>
+        	<li data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        </ul>
+
+        <hr>
+
+        <div data-role='collapsible' data-inset='false' data-iconpos='right' data-theme='e' data-content-theme='d'>
+
+          <h3>栏目列表</h3>
+
+          <div data-role='collapsible-set' data-inset='false' data-iconpos='right' data-theme='b' data-content-theme='d'>
+
+            <div data-role='collapsible'>
+
+              <h3>下级栏目</h3>
+
+              <ul data-role='listview'>
+				<li data-theme='a'><a href='/m/list/<?php echo $typeid; ?>' title='<?php echo $typename; ?>'><?php echo $typename; ?> &gt&gt</a></li><?php echo $_channellistnext; ?>
+              </ul>
+
+            </div><!-- /collapsible -->
+
+            <div data-role='collapsible'>
+
+              <h3>一级栏目</h3>
+
+              <ul data-role='listview'>
+				<li><a href='/m' data-icon='home'>主页</a></li>
+				<?php echo $_channellist; ?>
+              </ul>
+
+            </div><!-- /collapsible -->
+
+		  </div><!-- /collapsible-set -->
+
+  		</div><!-- /collapsible -->
+<?php
+include(DEDEROOT.'/templets/wap_m_inc/common.inc.wml');
+echo $pageBody;
+?>
+
+</div><!-- /page -->
+<!--div id='ad_hide'><script src='http://w.lzw.me/plus/ad_js.php?aid=23' language='javascript'></script></div-->
+</body>
+</html>

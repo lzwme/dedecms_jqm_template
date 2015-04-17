@@ -252,7 +252,11 @@ else
     $templatefile = DEDEROOT."/templets/default/wapsearch.htm";
 }*/
 
-$templatefile =  DEDEROOT."/templets/wap/wapsearch.wml";
+if (empty($tmpldir)) {
+    $tmpldir = 'wap';
+}
+
+$templatefile =  DEDEROOT . "/templets/{$tmpldir}/wapsearch.wml";
 
 $dlist->SetTemplate($templatefile);
 $dlist->SetSource($query);

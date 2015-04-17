@@ -1,48 +1,94 @@
 <?php
+/**
+ * æ”¯æŒæ•°ç»„è½¬æ¢çš„ gbk2utf8
+ * @param [type] $varlist [description]
+ */
+function ConvertCharset_custom($varlist) {
+	global $cfg_soft_lang;
+	if(preg_match('#utf#i',$cfg_soft_lang)) return 0;
+	$varlists = explode(',',$varlist);
+	$numargs=count($varlists);
+	for($i = 0; $i < $numargs; $i++)
+	{
+		if(isset($GLOBALS[$varlists[$i]]))
+		{
+			$GLOBALS[$varlists[$i]] = AutoCharset($GLOBALS[$varlists[$i]]);
+		}
+	} 
+	return 1;
+}
+
 require_once (dirname(__FILE__) . "/include/common.inc.php");
 header("Content-Type: text/html; charset=utf-8");
-//header("Content-type:text/vnd.wap.wml");
+
 require_once(dirname(__FILE__)."/include/wap.inc.php");
+
+//æ‰§è¡ŒåŠ¨ä½œ
 if(empty($action) || ($action=='list' && !intval($typeid)) || ($action=='article' && !intval($id))){
 	$action = 'index';
-} 
+}
+//æ¨¡æ¿ç±»å‹
+if(empty($tmpl)) {
+	$tmpl = 'wap';
+}
+//æ¨¡æ¿ç›®å½•
 $cfg_templets_dir = $cfg_basedir.$cfg_templets_dir;
-$channellist = '';
-$newartlist = '';
-$channellistnext = '';
 
-//¶¥¼¶µ¼º½ÁĞ±í
-$dsql->SetQuery("Select id,typename From `#@__arctype` where reid=0 And channeltype=1 And ishidden=0 And ispart<>2 order by sortrank");
+//é¢‘é“ id ä¸åç§°å¯¹åº”
+$channelArray = array(
+	1 => 'article',
+	2 => 'images',
+	3 => 'soft',
+	6 => 'shop',
+	'-8' => 'infos'
+);
+
+$channellist = array();
+$newartlist = array();
+$channellistnext = array();
+$mid = $mid || 1;
+
+//é¡¶çº§å¯¼èˆªåˆ—è¡¨
+$dsql->SetQuery("Select id,typename From `#@__arctype` where reid=0 And channeltype<3 And ishidden=0 And ispart<>2 order by sortrank");//limit 4
 $dsql->Execute();
 while($row=$dsql->GetObject())
 {
-	$channellist .= "<li><a href='wap.php?action=list&amp;typeid={$row->id}' data-icon='grid'>{$row->typename}</a></li> ";
+	array_push($channellist, array(
+		'typeid' => $row->id,
+		'typename' => $row->typename
+	));
+	//$channellist .= "<li><a href='wap.php?action=list&amp;typeid={$row->id}' data-icon='grid'>{$row->typename}</a></li> ";
 }
 
-//µ±Ç°Ê±¼ä
+//å½“å‰æ—¶é—´
 //$curtime = strftime("%Y-%m-%d %H:%M:%S",time());
 //$cfg_webname = ConvertStr($cfg_webname);
 
-//Ö÷Ò³
+//ä¸»é¡µ
 /*------------
 function __index();
 ------------*/
-if($action=='index')
-{
+if($action=='index') {
 	( isset($_GET[p]) && intval($_GET[p])>=0 && intval($_GET[p])<=2000 ) ? $p = intval($_GET[p]) : $p=1;
 	( isset($_GET[pz]) && intval($_GET[pz])>=0  && intval($_GET[pz])<=50 ) ? $pz = intval($_GET[pz]) : $pz=10;
 
-	//×îĞÂÎÄÕÂ
-	$dsql->SetQuery("Select id,typeid,title,pubdate,click From `#@__archives` where channel=1 And arcrank = 0 order by id desc limit " . ($p-1)*$pz . ",{$pz}");
+	//æœ€æ–°æ–‡ç« 
+	$dsql->SetQuery("Select id,typeid,title,pubdate,click,channel From `#@__archives` where channel<3 And arcrank = 0 order by id desc limit " . ($p-1)*$pz . ",{$pz}");
 	$dsql->Execute();
 	while($row=$dsql->GetObject())
 	{
-		$newartlist .= "<li><a href='wap.php?action=article&amp;typeid={$row->typeid}&amp;id={$row->id}'><h3>".ConvertStr($row->title)."</h3> <p class='ui-li-aside'>[".date("m-d",$row->pubdate)."]</p><span class='ui-li-count'>{$row->click}</span></a></li>";
+		array_push($newartlist, array(
+			'action' => $channelArray[$row->channel], 
+			'typeid' => $row->typeid, 
+			'id' => $row->id, 
+			'title' => $row->title, 
+			'click' => $row->click,
+			'pubdate' => $row->pubdate
+		));
+		//$newartlist .= "<li><a href='wap.php?action=" . $channelArray[$row->channel] . "&amp;typeid={$row->typeid}&amp;id={$row->id}'><h3>".ConvertStr($row->title)."</h3> <p class='ui-li-aside'>[".date("m-d",$row->pubdate)."]</p><span class='ui-li-count'>{$row->click}</span></a></li>";
 	}
-	$p_next_a = "wap.php?p=". ($p+1) ."&pz={$pz}";
-	if($p > 1) $p_prev_a = "wap.php?p=". ($p-1) ."&pz={$pz}";
-	//ÏÔÊ¾WML
-	include($cfg_templets_dir."/wap/index.wml");
+
+	include($cfg_templets_dir."/{$tmpl}/index.wml");
 	$dsql->Close();
 	echo $pageBody;
 	exit();
@@ -50,32 +96,37 @@ if($action=='index')
 /*------------
 function __list();
 ------------*/
-//ÁĞ±í
-else if($action=='list')
-{
+//åˆ—è¡¨
+else if($action=='list') {
 	$needCode = 'utf-8';
 	//$typeid = preg_replace("[^0-9]", '', $typeid);
 	//if(empty($typeid)) $typeid=1;
 
-	//µ±Ç°À¸Ä¿ÏÂ¼¶·ÖÀà
+	//å½“å‰æ ç›®ä¸‹çº§åˆ†ç±»
 	//$typeid = preg_replace("[^0-9]", '', intval($_GET[typeid]));
-	$dsql->SetQuery("Select id,typename From `#@__arctype` where reid='{$typeid}' And channeltype=1 And ishidden=0 And ispart<>2 order by sortrank");
+	$dsql->SetQuery("Select id,typename,channeltype From `#@__arctype` where reid='{$typeid}' And channeltype<3 And ishidden=0 And ispart<>2 order by sortrank");
 	$dsql->Execute();
 	while($row=$dsql->GetObject())
 	{
-		$channellistnext .= "<li><a href='wap.php?action=list&amp;typeid={$row->id}'>".ConvertStr($row->typename)."</a></li> ";
+		array_push($channellistnext, array(
+			'typeid' => $row->id,
+			'typename' => $row->typename
+		));
+		//$channellistnext .= "<li><a href='wap.php?action=list&amp;typeid={$row->id}'>".ConvertStr($row->typename)."</a></li> ";
 	}
 
 	require_once(dirname(__FILE__)."/include/datalistcp.class.php");
-	$row = $dsql->GetOne("Select typename,ishidden From `#@__arctype` where id='$typeid' ");
+	$row = $dsql->GetOne("Select typename,ishidden,channeltype From `#@__arctype` where id='$typeid' ");
 	if($row['ishidden']==1) exit();
 	$typename = ConvertStr($row['typename']);
-	//À¸Ä¿ÄÚÈİ(·ÖÒ³Êä³ö)
-	$sids = GetSonIds($typeid,1,true);
-	$varlist = "cfg_webname,typename,channellist,channellistnext,cfg_templeturl";
-	ConvertCharset($varlist);
+	$channeltype = $channelArray[$row['channeltype']];
+
+	//æ ç›®å†…å®¹(åˆ†é¡µè¾“å‡º)
+	$sids = GetSonIds($typeid,0,true);
+	$varlist = "cfg_webname,typename,channeltype,channellist,channellistnext,cfg_templeturl";
+	ConvertCharset_custom($varlist);
 	$dlist = new DataListCP();
-	$dlist->SetTemplet($cfg_templets_dir."/wap/list.wml");
+	$dlist->SetTemplet($cfg_templets_dir."/{$tmpl}/list.wml");
 	$dlist->pageSize = 10;
 	$dlist->SetParameter("action","list");
 	$dlist->SetParameter("typeid",$typeid);
@@ -83,27 +134,26 @@ else if($action=='list')
 	$dlist->Display();
 	exit();
 }
-//ÎÄµµ
+//æ–‡æ¡£
 /*------------
 function __article();
 ------------*/
-else if($action=='article')
-{
-	//ä¯ÀÀÁ¿+1
+else if($action=='article') {
+	//æµè§ˆé‡+1
 	$dsql->ExecuteNoneQuery("Update `#@__archives` set click=click+1 where id='$id'");
 
-	//ÎÄµµĞÅÏ¢
+	//æ–‡æ¡£ä¿¡æ¯
 	$query = "Select tp.typename,tp.reid,tp.ishidden,arc.typeid,arc.title,arc.arcrank,arc.pubdate,arc.writer,arc.click,addon.body From `#@__archives` arc 
 	  left join `#@__arctype` tp on tp.id=arc.typeid
 	  left join `#@__addonarticle` addon on addon.aid=arc.id
 	  where arc.id='$id'";
 	$row = $dsql->GetOne($query,MYSQL_ASSOC);
 	foreach($row as $k=>$v) $$k = $v;
-	//»ñÈ¡Í¬·ÖÀàÇ°Ò»ÌõµÄid
+	//è·å–åŒåˆ†ç±»å‰ä¸€æ¡çš„id
 	$query = "Select id FROM `#@__archives` where id<'$id' AND typeid='$typeid' order by id desc limit 1";
 	$row = $dsql->GetOne($query,MYSQL_ASSOC);
 	(!empty($row[id])) ? $prev_arc_id = $row[id] : $prev_arc_id = $id;
-	//»ñÈ¡Í¬·ÖÀàºóÒ»ÌõµÄid
+	//è·å–åŒåˆ†ç±»åä¸€æ¡çš„id
 	$query = "Select id FROM `#@__archives` where id>'$id' AND typeid='$typeid' order by id asc limit 1";
 	$row = $dsql->GetOne($query,MYSQL_ASSOC);
 	(!empty($row[id])) ? $next_arc_id = $row[id] : $next_arc_id = $id;
@@ -118,41 +168,108 @@ else if($action=='article')
 	$body = html2wml($body);
 	if($ishidden==1) exit();
 
-	//µ±Ç°À¸Ä¿Í¬¼¶·ÖÀà
+	//å½“å‰æ ç›®åŒçº§åˆ†ç±»
 	//$reid = $reid;
 	//if($typeid){
-		//»ñÈ¡µ±Ç°À¸Ä¿ÉÏ¼¶·ÖÀàid
-		//$dsql->SetQuery("Select reid From `#@__arctype` where id='{$typeid}' And channeltype=1 And ishidden=0 And ispart<>2 limit 1");
+		//è·å–å½“å‰æ ç›®ä¸Šçº§åˆ†ç±»id
+		//$dsql->SetQuery("Select reid From `#@__arctype` where id='{$typeid}' And channeltype<3 And ishidden=0 And ispart<>2 limit 1");
 		//$dsql->Execute();
-		//Èç¹û»ñÈ¡µ½ÁËÊı¾İ
+		//å¦‚æœè·å–åˆ°äº†æ•°æ®
 		//if($row=$dsql->GetObject()){
 			//$reid = $row->reid;
 		if($reid){
-			$dsql->SetQuery("Select id,typename From `#@__arctype` where reid='{$reid}' And channeltype=1 And ishidden=0 And ispart<>2 order by sortrank");
+			$dsql->SetQuery("Select id,typename From `#@__arctype` where reid='{$reid}' And channeltype<3 And ishidden=0 And ispart<>2 order by sortrank");
 			$dsql->Execute();
 			while($row=$dsql->GetObject())
 			{
-				$channellistnext .= "<li><a href='wap.php?action=list&amp;typeid={$row->id}'>".ConvertStr($row->typename)."</a></li> ";
+				array_push($channellistnext, array(
+					'typeid' => $row->id,
+					'typename' => $row->typename
+				));
+				//$channellistnext .= "<li><a href='wap.php?action=list&amp;typeid={$row->id}'>".ConvertStr($row->typename)."</a></li> ";
 			}
 		}
 	//}
 
-	//À¸Ä¿ÄÚÈİ(·ÖÒ³Êä³ö)
-	include($cfg_templets_dir."/wap/article.wml");
+	//æ ç›®å†…å®¹(åˆ†é¡µè¾“å‡º)
+	include($cfg_templets_dir."/{$tmpl}/article.wml");
 	$dsql->Close();
 	echo $pageBody;
 	exit();
 }
-//´íÎó
+//å›¾ç‰‡
+/*------------
+function __images();
+------------*/
+else if($action=='images') {
+	//æµè§ˆé‡+1
+	$dsql->ExecuteNoneQuery("Update `#@__archives` set click=click+1 where id='$id'");
+
+	//æ–‡æ¡£ä¿¡æ¯
+	$query = "Select tp.typename,tp.reid,tp.ishidden,arc.typeid,arc.title,arc.arcrank,arc.pubdate,arc.writer,arc.click,addon.body,addon.imgurls From `#@__archives` arc 
+	  left join `#@__arctype` tp on tp.id=arc.typeid
+	  left join `#@__addonimages` addon on addon.aid=arc.id
+	  where arc.id='$id'";
+	$row = $dsql->GetOne($query,MYSQL_ASSOC);
+	foreach($row as $k=>$v) $$k = $v;
+	//è·å–åŒåˆ†ç±»å‰ä¸€æ¡çš„id
+	$query = "Select id FROM `#@__archives` where id<'$id' AND typeid='$typeid' order by id desc limit 1";
+	$row = $dsql->GetOne($query,MYSQL_ASSOC);
+	(!empty($row[id])) ? $prev_arc_id = $row[id] : $prev_arc_id = $id;
+	//è·å–åŒåˆ†ç±»åä¸€æ¡çš„id
+	$query = "Select id FROM `#@__archives` where id>'$id' AND typeid='$typeid' order by id asc limit 1";
+	$row = $dsql->GetOne($query,MYSQL_ASSOC);
+	(!empty($row[id])) ? $next_arc_id = $row[id] : $next_arc_id = $id;
+
+	//echo 'id:',$id,',typeid:',$typeid,',prev_arcid:',$prev_arc_id,'next_arcid:',$next_arc_id;die();
+	
+	unset($row);
+
+	if($ishidden==1) exit();
+
+	$pubdate = strftime("%y-%m-%d %H:%M:%S",$pubdate);
+	if($arcrank!=0) exit();
+	$title = ConvertStr($title);
+	$body = html2wml($body);
+
+	preg_match_all("/ddimg='(.*?)'/i", $imgurls, $images_array);
+
+
+	$imgContent = '';
+	foreach ($images_array[1] as $key => $value) {
+		$imgContent .= '<img data-index="' . $key . '" src="' . $value . '" width="99%"><br>';
+	}
+
+	//å½“å‰æ ç›®åŒçº§åˆ†ç±»
+	if($reid){
+		$dsql->SetQuery("Select id,typename From `#@__arctype` where reid='{$reid}' And channeltype<3 And ishidden=0 And ispart<>2 order by sortrank");
+		$dsql->Execute();
+		while($row=$dsql->GetObject())
+		{
+			array_push($channellistnext, array(
+				'typeid' => $row->id,
+				'typename' => $row->typename
+			));
+			//$channellistnext .= "<li><a href='wap.php?action=list&amp;typeid={$row->id}'>".ConvertStr($row->typename)."</a></li> ";
+		}
+	}
+
+	$mid = 2;
+	//æ ç›®å†…å®¹(åˆ†é¡µè¾“å‡º)
+	include($cfg_templets_dir."/{$tmpl}/article.wml");
+	$dsql->Close();
+	echo $pageBody;
+	exit();
+}
+//é”™è¯¯
 /*------------
 function __error();
 ------------*/
 else
 {
-	ConvertCharset($varlist);
-	include($cfg_templets_dir."/wap/error.wml");
+	ConvertCharset_custom($varlist);
+	include($cfg_templets_dir."/{$tmpl}/error.wml");
 	$dsql->Close();
-	ConvertCharset($varlist);
 	echo $pageBody;
 	exit();
 }

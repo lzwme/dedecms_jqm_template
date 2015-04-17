@@ -1,0 +1,78 @@
+<?php
+require_once(DEDEINC."/wap.inc.php");
+
+$varlist = "cfg_webname,title,channellist,channellistnext,cfg_templeturl,writer,typename,body,page,Wap_Copyright,wap_keyword,wap_description";
+ConvertCharset($varlist);
+?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<!--meta name="viewport" content="width=device-width, initial-scale=1.0,  maximum-scale=1.0, user-scalable=0" /-->
+	<title>搜索结果-<?php echo $cfg_webname; ?></title>
+	<meta name="description" content="<?php echo $typename; ?>-<?php echo $wap_description ?>" /><meta name="keywords" content="<?php echo $typename; ?>,<?php echo $wap_keyword ?>" />
+	<?php 
+	include(DEDEROOT.'/templets/wap_m_inc/head.inc.wml');
+	echo $headInc;
+	?>
+</head>
+<body>
+　<div data-role='page'>
+	<div data-role='header' data-position='fixed'>
+		<a href='/m' data-icon='home' data-theme='d' data-iconpos='notext' data-transition='turn'><?php echo gb2utf8($cfg_webname) ?></a>
+		<h1 role='heading'><?php echo ' 搜索结果 | ',gb2utf8($cfg_webname) ?></h1>
+		 <a href='#menu-panel' data-icon='bars' data-theme='c' data-iconpos='notext' data-shadow='false' data-iconshadow='false'>菜单</a>
+	</div><!-- /header -->
+　　<div data-role='content'>
+		<form action='/plus/wapsearch.php' method='get'>
+			<input type='hidden' name='mid' value='1' />
+			<input type='hidden' name='tmpldir' value='m' />
+			<input type='hidden' name='dopost' value='search' />
+			<input type='search' name='q' id='search' value='' placeholder='input keywords' />
+		</form>
+　　　	<ul data-role='listview' data-inset='true'>
+
+			{dede:datalist}
+			<?php
+			$fields['stime'] = GetDateTimeMk($fields['senddate']);
+			$fields['arcurl'] = GetArcUrl($fields['aid'],$fields['typeid'],$fields['senddate'],$fields['title'],$fields['ismake'],$fields['arcrank'],$fields['namerule'],$fields['typedir'],$fields['money']);
+			$fields['typeurl'] = GetTypeUrl($fields['typeid'],MfTypedir($fields['typedir']),$fields['isdefault'],$fields['defaultname'],
+						$fields['ispart'],$fields['namerule2'],$fields['moresite'],$fields['siteurl'],$fields['sitepath']);
+			?>
+
+			<?php
+			//if(eregi('^gb',$cfg_soft_lang)) $fields['title'] = gb2utf8($fields['title']);
+			?>
+			<li><a href='/m/article/<?php echo $fields['typeid']; ?>/<?php echo $fields['aid']; ?>'><?php echo gb2utf8($fields['title']); ?><p class='ui-li-aside'>[<?php echo MyDate('y-m-d',$fields['pubdate']); ?>]</p></a></li>
+			{/dede:datalist}
+		</ul>
+		<div class='nav page' data-role='navbar'> <ul>{dede:pagelist listsize='1' /} </ul></div>
+	</div>
+
+	<div data-role='footer' data-position='fixed'>
+		<div data-role='navbar' class='ui-bar'>
+			<ul>
+				<li><a href='#share-panel' data-theme='e' data-icon='back'>分享</a></li>
+				<li><a data-transition='flow' href='/m' data-icon='home'>主页</a></li>
+				<?php echo $channellist; ?>
+			</ul>
+		</div>
+	</div><!-- /footer -->
+
+	<div data-role='panel' id='menu-panel' data-display='overlay' data-position='right'>
+
+        <ul data-role='listview' data-theme='d'>
+        	<li data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        	<li data-theme='b' data-icon='delete'><a href='#' data-rel='close'>关闭菜单</a></li>
+        </ul>
+
+<?php
+include(DEDEROOT.'/templets/wap_m_inc/common.inc.wml');
+echo $pageBody;
+?>
+</div><!-- /page -->
+
+<div id='ad_hide'><script src='http://w.lzw.me/plus/ad_js.php?aid=23' language='javascript'></script></div>
+<script src='<?php echo $cfg_templeturl;?>/asset/js.js'></script>
+</body>
+</html>
